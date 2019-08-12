@@ -8,10 +8,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-class PersonsAdapter : ListAdapter<Person, PersonsAdapter.PersonViewHolder>(PersonDiffUtil()) {
+class PersonsAdapter(private val onClick: (Person) -> Unit) :
+    ListAdapter<Person, PersonsAdapter.PersonViewHolder>(PersonDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder =
-            PersonViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false))
+        PersonViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
+        )
 
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
         holder.bind(getItem(position))
@@ -19,6 +22,12 @@ class PersonsAdapter : ListAdapter<Person, PersonsAdapter.PersonViewHolder>(Pers
 
     inner class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvName by lazy { itemView.findViewById<TextView>(R.id.tv_name) }
+
+        init {
+            itemView.setOnClickListener {
+                onClick(getItem(adapterPosition))
+            }
+        }
 
         fun bind(person: Person) {
             tvName.text = person.name

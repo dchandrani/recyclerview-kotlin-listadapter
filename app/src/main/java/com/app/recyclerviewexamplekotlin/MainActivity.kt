@@ -1,7 +1,8 @@
 package com.app.recyclerviewexamplekotlin
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +22,14 @@ class MainActivity : AppCompatActivity() {
         persons.add(Person(name = "Abc Xyz"))
 
         // Create adapter object
-        val personsAdapter = PersonsAdapter()
+        // Two ways to set click listener
+        // 1. Using DSL like below
+        val personsAdapter = PersonsAdapter {
+            Toast.makeText(this, "${it.name} clicked", Toast.LENGTH_SHORT).show()
+        }
+
+        // 2. By calling method like below
+        // val personsAdapter = PersonsAdapter(::onClick)
 
         // Configure recyclerview
         mRecyclerView.apply {
@@ -33,5 +41,9 @@ class MainActivity : AppCompatActivity() {
 
         // Post data using submitList method
         personsAdapter.submitList(persons)
+    }
+
+    private fun onClick(person: Person) {
+        Toast.makeText(this, "${person.name} clicked", Toast.LENGTH_SHORT).show()
     }
 }
